@@ -16,23 +16,17 @@ h1
 {
     /*border: 3px solid green;*/
     width: 100%;
-    height: 330px;  
-    position: relative;     
-    /*margin-right: 30px;
-    margin-left: 5px;*/
+    height: 350px;    
 }
 
-.box 
+.box
 {    
-	border: 3px solid black;
-    width: 31%;
-	height: 65%;     
-    position: relative;
-    /*left: 20px;*/
-    top: 20px;
-	background: gray;
+	border: 3px solid black;    
+	height: 60%;
+    position: relative;    
+    background: gray;
     float: left;    
-    margin-left:20px;    
+    margin-left:10px;    
     margin-top: 20px;
     
 }
@@ -44,21 +38,20 @@ h1
     padding: 3px 0px 30px 0px;    
     width: 40%;
     height: 10px;
-    position: relative;
+    
     float:right;    
-    /*border-right: 0.5px solid black;*/
     font-weight: bold;
     font-size: 20px;
 }
     
 .boxContent
 {
-    font-family: Calibri, Arial, Helvetica, sans-serif;
+    font-family: sans-serif, Calibri, Arial, Helvetica;
     font-size: 18px;
     text-align: justify;      
     position: absolute;
     top:40px;
-    padding: 10px 10px 0px 10px;
+    margin: 10px;
     /*border: 3px solid lightblue;*/
 }
     
@@ -80,31 +73,33 @@ h1
 
 @media(min-width: 992px)
 {
-    .box
+    .col-lg-4
     {           
-        width: 31%;
+        width: 32%;
+        float: left;
     }
 }
 
 @media(min-width: 768px) and (max-width: 991px)
 {
-    .box
+    .col-md-1
     {   
-        width: 47%;
+        width: 97.5%;
+        float: left;
     }
-    div.entireRow
+    .col-md-6
     {        
-        width: 96.3%;        
-    }   
+        width: 48%;
+        float: left;
+    }
     
 }
 
 @media(max-width: 767px)
 {
-    .box
-    {
-        position: relative;
-        width: 380px;        
-        left: 25%;
-    }
+    .col-sm-12
+    {   
+        width: 97%;
+        float: left;
+    }    
 }
