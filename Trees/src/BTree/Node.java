@@ -46,4 +46,8 @@ public class Node
         this.left = null;
         this.right = null;
     }
+    public boolean isLeafNode()
+    {
+        return ((this.getLeft() == null) && (this.getRight() == null));
+    }
 }
