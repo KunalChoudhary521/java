@@ -35,7 +35,7 @@ public class Node
     public Node getParent() { return this.parent; }
     public void setParent(Node prnt) { this.parent = prnt; }
 
-    public Node createNode(int dt, Node lfChild, Node rtChild, Node prt)
+    public static Node createNode(int dt, Node lfChild, Node rtChild, Node prt)
     {
         Node temp = new Node(dt, lfChild, rtChild, prt);
         return temp;
