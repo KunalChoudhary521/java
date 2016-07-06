@@ -9,6 +9,12 @@ public class BST implements Tree
     BST()
     {
         root.setParent(null);
+        //treeHeight = 0;
+    }
+
+    public Node getRoot()
+    {
+        return root;
     }
 
     public boolean isTreeEmpty()
@@ -17,15 +23,44 @@ public class BST implements Tree
         return (root == null);
     }
 
-    public int findHeight()//maximum number of nodes root & deepest leaf node
+    public int findHeight(Node curr, int height)//maximum number of nodes root & deepest leaf node
     {
+        int leftHeight = height;
+        int rightHeight = height;
+
+        if(curr.getLeft() != null)
+        {
+            leftHeight = findHeight(curr.getLeft(), height + 1);
+        }
+        if(curr.getRight() != null)
+        {
+            rightHeight = findHeight(curr.getRight(), height + 1);
+        }
+
+        return (leftHeight > rightHeight ? leftHeight : rightHeight);
+    }
+    
+    public int depthOfNode(Node curr, int dt, int depth)//number of nodes b/w curr node & root node
+    {
+        //let root node be at depth 0
+        if((dt < curr.getData()) && (curr.getLeft() != null))
+        {
+            return depthOfNode(curr.getLeft(), dt, depth + 1);
+        }
+        else if((dt > curr.getData()) && (curr.getRight() != null))
+        {
+            return depthOfNode(curr.getRight(), dt, depth + 1);
+        }
+        else if(curr.getData() == dt)
+        {
+            return depth;
+        }
+
+        System.out.println("Node " + dt + " is not in the tree");
         return 0;
     }
-    public int depthOfNode(Node curr)//number of nodes b/w curr node & root node
-    {
-        return 0;
-    }
-    public int numChildren(Node curr)//returns # of children a node has
+
+    public int numChildren(Node curr)//returns number of children a node has
     {
         int numOfNodes = 0;
         if((!isTreeEmpty()) && (curr != null))
@@ -40,10 +75,37 @@ public class BST implements Tree
         return numOfNodes;
     }
 
-    public void insertNode(int dt)
+    public void insertNode(Node curr, int dt)//initially, curr is root node
     {
-
+        Node nodeToAdd = null;
+        if(dt < curr.getData())
+        {
+            if(curr.getLeft() == null)
+            {
+                nodeToAdd = Node.createNode(dt,null,null,curr);
+            }
+            else
+            {
+                insertNode(curr.getLeft(), dt);
+            }
+        }
+        else if(dt > curr.getData())
+        {
+            if(curr.getRight() == null)
+            {
+                nodeToAdd = Node.createNode(dt,null,null,curr);
+            }
+            else
+            {
+                insertNode(curr.getRight(), dt);
+            }
+        }
+        else//This can also happen:-->  dt == curr.getData()
+        {
+            System.out.println(dt + " is already in the Tree.");
+        }
     }
+
     public Node searchNode(Node curr, int dt)//initially, curr is root node
     {
         if((dt < curr.getData()) && (curr.getLeft() != null))
@@ -54,14 +116,22 @@ public class BST implements Tree
         {
             return searchNode(curr.getRight(), dt);
         }
-        else
+        else if(curr.getData() == dt)
         {
             return curr;
         }
 
+        System.out.println("Node " + dt + " is not in the tree");
+        return null;
     }
+
     public void deleteNode(int dt)
     {
+        if(isTreeEmpty())
+        {
+            return;
+        }
+
         Node nodeTodelete = searchNode(root, dt);
 
         //4 cases to consider:
@@ -69,23 +139,76 @@ public class BST implements Tree
         //1: nodeTodelete is a leaf node
         if(nodeTodelete.isLeafNode())
         {
-            nodeTodelete = null;//check if parentNode's left/right child is set to null
+            nodeTodelete.setParent(null);
+            nodeTodelete = null;//TEST: if parentNode's left/right child is set to null
         }
-        //2: nodeTodelete is root node
+        //2a: nodeTodelete has left child
+        else if((nodeTodelete.getLeft() != null) && (nodeTodelete.getRight() == null))
+        {
+            nodeTodelete.setParent(nodeTodelete.getLeft());
+            (nodeTodelete.getLeft()).setParent(nodeTodelete.getParent());
 
-        //3: nodeTodelete has 1 child (left or right)
+            nodeTodelete.setParent(null);
+            nodeTodelete = null;//TEST: if parent's child is null
+        }
+        //2b: nodeTodelete has right child
+        else if((nodeTodelete.getRight() != null) && (nodeTodelete.getLeft() == null))
+        {
+            nodeTodelete.setParent(nodeTodelete.getRight());
+            (nodeTodelete.getRight()).setParent(nodeTodelete.getParent());
 
-        //4: nodeTodelete has 2 children
+            nodeTodelete.setParent(null);
+            nodeTodelete = null;//TEST: if parent's child is null
+        }
+        //3: nodeTodelete has 2 children (it may be the root node)
+        /* Swap data of root with the data of largest node from the left subtree.
+        *  Then, delete that node.
+        * */
+        else
+        {
+            nodeTodelete = largestFromLeft(nodeTodelete.getLeft());
+            nodeTodelete.setData(nodeTodelete.getData());
+
+            if(nodeTodelete.isLeafNode())
+            {
+                nodeTodelete.setParent(null);
+                nodeTodelete = null;//TEST: if parent's right child is null
+            }
+            else//Now, nodeTodelete CANNOT have a right child because then that would be the largest node in the left subtree. It may a left subtree or a child.
+            {
+                nodeTodelete.setParent(nodeTodelete.getLeft());
+                (nodeTodelete.getLeft()).setParent(nodeTodelete.getParent());
+
+                nodeTodelete.setParent(null);
+                nodeTodelete = null;//TEST: if parent's right child is null
+            }
+        }
 
     }
+
     public void removeTree(Node curr)//initially, curr is root node
     {
+        //remove the entire tree using post order traversal
+        if(curr != null)
+        {
+            removeTree(curr.getLeft());
 
+            removeTree(curr.getRight());
+
+            curr.setParent(null);
+            curr = null;
+        }
     }
 
+    //returns the largest node from the left subtree
     public Node largestFromLeft(Node curr)
     {
-        return null;
+        if(curr.getRight() == null)
+        {
+            return curr;
+        }
+
+        return largestFromLeft(curr.getRight());
     }
 
     public ArrayList<Integer> inOrderTraversal(Node curr, ArrayList<Integer> itemList)//used to test functionality of the tree
