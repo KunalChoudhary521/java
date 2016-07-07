@@ -30,7 +30,7 @@ public class Node
     public void setLeft(Node lfNode) { this.left = lfNode; }
 
     public Node getRight() { return this.right; }
-    public void setRight(Node rtNode) { this.left = rtNode; }
+    public void setRight(Node rtNode) { this.right = rtNode; }
 
     public Node getParent() { return this.parent; }
     public void setParent(Node prnt) { this.parent = prnt; }
