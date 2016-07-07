@@ -6,10 +6,9 @@ public class BST implements Tree
 {
     private Node root = null;
 
-    BST()
+    public BST()
     {
-        root.setParent(null);
-        //treeHeight = 0;
+        //root.setParent(null);
     }
 
     public Node getRoot()
@@ -19,7 +18,7 @@ public class BST implements Tree
 
     public boolean isTreeEmpty()
     {
-        System.out.println("The tree is empty!!");
+        //System.out.println("The tree is empty!!");
         return (root == null);
     }
 
@@ -77,12 +76,20 @@ public class BST implements Tree
 
     public void insertNode(Node curr, int dt)//initially, curr is root node
     {
+        if(isTreeEmpty())
+        {
+            //System.out.println("The tree is empty!!");
+            root = Node.createNode(dt, null, null, null);
+            return;
+        }
+
         Node nodeToAdd = null;
         if(dt < curr.getData())
         {
             if(curr.getLeft() == null)
             {
                 nodeToAdd = Node.createNode(dt,null,null,curr);
+                curr.setLeft(nodeToAdd);
             }
             else
             {
@@ -94,6 +101,7 @@ public class BST implements Tree
             if(curr.getRight() == null)
             {
                 nodeToAdd = Node.createNode(dt,null,null,curr);
+                curr.setRight(nodeToAdd);
             }
             else
             {
@@ -129,6 +137,7 @@ public class BST implements Tree
     {
         if(isTreeEmpty())
         {
+            System.out.println("The tree is empty!!");
             return;
         }
 
@@ -186,6 +195,7 @@ public class BST implements Tree
 
     }
 
+    //removeTree function is not necessary because Java's GC can re-claim memory on its own
     public void removeTree(Node curr)//initially, curr is root node
     {
         //remove the entire tree using post order traversal
@@ -213,13 +223,16 @@ public class BST implements Tree
 
     public ArrayList<Integer> inOrderTraversal(Node curr, ArrayList<Integer> itemList)//used to test functionality of the tree
     {
-        if(curr != null)
+        if(curr.getLeft() != null)
         {
-            itemList.addAll(inOrderTraversal(curr.getLeft(), itemList));
+            inOrderTraversal(curr.getLeft(), itemList);
+        }
 
-            itemList.add(curr.getData());
+        itemList.add(curr.getData());
 
-            itemList.addAll(inOrderTraversal(curr.getRight(), itemList));
+        if(curr.getRight() != null)
+        {
+            inOrderTraversal(curr.getRight(), itemList);
         }
 
         return itemList;
